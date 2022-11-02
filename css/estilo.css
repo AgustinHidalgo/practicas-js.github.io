@@ -1,0 +1,25 @@
+body{
+    background-color: lightseagreen;
+}
+
+#catalogo{
+    background-color: darkgray;
+    height: 500px;
+}
+h1{
+    text-align: center;
+}
+
+img{
+    width: 100px;
+    height: 100px;
+}
+.card{
+    display: flex;
+    align-items: center;
+    margin: 5px;
+    
+}
+.card p {
+    margin: 10px;
+}
