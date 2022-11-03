@@ -14,7 +14,8 @@ let producto4 = new productos("Durazno", 430, "agua", "./img/durazno.jpg")
 let listaDeProductos = [producto1, producto2, producto3, producto4]
 let catalogo = document.getElementById("catalogo")
 function creadorDeCards(listas){
-    catalogo.innerHTML = "<h1>Productos</h1>"
+    catalogo.innerHTML = ``
+    
     for (prod of listas){
         let card = document.createElement("div")
 
@@ -23,12 +24,31 @@ function creadorDeCards(listas){
         card.innerHTML = `<img src=${prod.img}> <h2> Sabor: ${prod.nombre}</h2> <p> Precio: $${prod.precio}</p>`
         catalogo.append(card)
     }
-}
-
+} 
 creadorDeCards(listaDeProductos)
 
-let eleccionDeSabor = prompt("Elija una categoria A) Crema B)Agua")
+let eleccionDeCategoria = ""
 
-let filtroNuevo = listaDeProductos.filter((prod) => prod.categoria == eleccionDeSabor)
+let valorInput = document.getElementById("categoriaElegida")
+valorInput.addEventListener("change", ()=>{eleccionDeCategoria = valorInput.value})
 
-creadorDeCards(filtroNuevo)
+
+let botonDeFiltrado = document.getElementById("filtrar")
+
+botonDeFiltrado.addEventListener("click", filtradoProductos)
+let mostrarTodos = document.getElementById("volverATodos")
+mostrarTodos.addEventListener("click", ()=>{creadorDeCards(listaDeProductos)})
+function filtradoProductos(){
+    let filtroNuevo = listaDeProductos.filter((prod) => prod.categoria == eleccionDeCategoria)
+    creadorDeCards(filtroNuevo)
+    if(filtroNuevo.length == 0){
+        catalogo.innerHTML = "No tenemos ese producto todavia"
+    }
+    
+}
+
+
+
+
+
+/* let eleccionDeSabor = prompt("Elija una categoria A) Crema B)Agua") */
