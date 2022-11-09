@@ -1,17 +1,29 @@
-function productos (nombre, precio, categoria, img, id){
+function productos (nombre, precio, categoria, img, id,descrip){
     this.nombre = nombre
     this.precio = precio
     this.categoria = categoria
     this.img = img
     this.id= id
+    this.descrip = descrip
 }
 
-let producto1 = new productos("Dulce de leche", 500, "crema", "./img/helado-de-dulce-de-leche-640x480.webp",1)
-let producto2 = new productos("Americana", 480, "crema", "./img/americana.webp",2)
-let producto3 = new productos("Frutilla", 450, "agua", "./img/frutilla.jpg",3)
-let producto4 = new productos("Durazno", 430, "agua", "./img/durazno.jpg",4)
+let producto1 = new productos("Dulce de leche", 500, "crema", "./img/dulcedeleche.jpg", 1, "Crema helada de Dulce de Leche")
+let producto2 = new productos("Americana", 480, "crema", "img/crema-americana.jpg", 2,"Helado de Crema Americana con una nueva formula.")
+let producto3 = new productos("Frutilla", 430, "agua", "img/frutilla-agua.jpg", 3,"Helado de agua de frutilla con trocitos de frutillas.")
+let producto4 = new productos("Durazno", 460, "agua", "img/Durazno-a-la-crema.jpg", 4,"Helado de agua de Durazno.")
+let producto5 = new productos("Maracuya",430, "agua", "img/maracuya.jpg", 5, "Helado de agua sabor maracuyá, con agregado de pulpa de maracuyá.")
+let producto6 = new productos("Chocolate", 500, "crema", "./img/chocolate.jpg", 6, 'Crema helada de chocolate semi amargo.')
 
-let listaDeProductos = [producto1, producto2, producto3, producto4]
+
+let listaDeProductos = [producto1, producto2, producto3, producto4, producto5, producto6]
+
+
+
+
+
+//empieza el codigo js sin informacion
+
+
 let catalogo = document.getElementById("catalogo")
 function creadorDeCards(listas){
     catalogo.innerHTML = ``
@@ -21,7 +33,7 @@ function creadorDeCards(listas){
 
         card.className = "card"
 
-        card.innerHTML = `<img src=${prod.img}> <h2> Sabor: ${prod.nombre}</h2> <p> Precio: $${prod.precio}</p> <button class="botonesStyle" mark="${prod.id}"> Comprar </button>`
+        card.innerHTML = `<img src=${prod.img}> <hr> <div class="cardBody"><h2> Sabor: ${prod.nombre}</h2> <p> Precio: $${prod.precio}</p><p>Descripcion: ${prod.descrip}</div> <div class="cardButton"><button class="botonesStyle" mark="${prod.id}"> Comprar </button> </div>`
         catalogo.append(card)
     }
 } 
