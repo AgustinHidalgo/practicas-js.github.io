@@ -1,77 +1,115 @@
-function productos (nombre, precio, categoria, img, id,descrip){
-    this.nombre = nombre
-    this.precio = precio
-    this.categoria = categoria
-    this.img = img
-    this.id= id
-    this.descrip = descrip
-}
-
-let producto1 = new productos("Dulce de leche", 500, "crema", "./img/dulcedeleche.jpg", 1, "Crema helada de Dulce de Leche")
-let producto2 = new productos("Americana", 480, "crema", "img/crema-americana.jpg", 2,"Helado de Crema Americana con una nueva formula.")
-let producto3 = new productos("Frutilla", 430, "agua", "img/frutilla-agua.jpg", 3,"Helado de agua de frutilla con trocitos de frutillas.")
-let producto4 = new productos("Durazno", 460, "agua", "img/Durazno-a-la-crema.jpg", 4,"Helado de agua de Durazno.")
-let producto5 = new productos("Maracuya",430, "agua", "img/maracuya.jpg", 5, "Helado de agua sabor maracuyá, con agregado de pulpa de maracuyá.")
-let producto6 = new productos("Chocolate", 500, "crema", "./img/chocolate.jpg", 6, 'Crema helada de chocolate semi amargo.')
-
-
-let listaDeProductos = [producto1, producto2, producto3, producto4, producto5, producto6]
-
-
-
-
-
-//empieza el codigo js sin informacion
-
-
+//llamar los datos del json}
 let catalogo = document.getElementById("catalogo")
-function creadorDeCards(listas){
-    catalogo.innerHTML = ``
+let carrito = []
+const carritoButton = document.getElementById("botonCarrito")
+const modal = document.getElementById("conteinerModal")
+
+fetch('data.json')
+.then((response) => response.json())
+.then((resultado)=>{
     
-    for (prod of listas){
+    productos = resultado.productos
+
+    generarProductos(productos)
+
+})
+
+
+function generarProductos(productos){
+    catalogo.innerHTML = ""
+    productos.forEach((producto) =>{
         let card = document.createElement("div")
+        card.classList.add("card")
+        card.innerHTML = `
+        <img src=${producto.img}> 
+        <hr>
+        <div class="cardBody">
+            <h2> Sabor: ${producto.nombre}<//h2>
+            <p> Precio por kilo: $${producto.precio}</p>
+            <p> Descripcion: ${producto.descrip}</p>
+        </div>
+        <div class="cardButton">
+            <button class="botonesStyle" id="agregar ${producto.id}">Comprar</button>
+        </div>
+        `
 
-        card.className = "card"
-
-        card.innerHTML = `<img src=${prod.img}> <hr> <div class="cardBody"><h2> Sabor: ${prod.nombre}</h2> <p> Precio: $${prod.precio}</p><p>Descripcion: ${prod.descrip}</div> <div class="cardButton"><button class="botonesStyle" mark="${prod.id}"> Comprar </button> </div>`
-        catalogo.append(card)
+    catalogo.append(card);
+    let button = document.getElementById(`agregar ${producto.id}`);
+    button.addEventListener("click", () => {
+        addAlCarrito(producto.id)
+    })
+    
     }
-} 
-creadorDeCards(listaDeProductos)
-
-let eleccionDeCategoria = ""
-
-let valorInput = document.getElementById("categoriaElegida")
-valorInput.addEventListener("change", ()=>{eleccionDeCategoria = valorInput.value})
-
-
-
-let botonDeFiltrado = document.getElementById("filtrar")
-
-botonDeFiltrado.addEventListener("click", filtradoProductos)
-
-let mostrarTodos = document.getElementById("volverATodos")
-
-mostrarTodos.addEventListener("click", ()=>{creadorDeCards(listaDeProductos)})
-
-function filtradoProductos(){
-    let filtroNuevo = listaDeProductos.filter((prod) => prod.categoria == eleccionDeCategoria)
-    creadorDeCards(filtroNuevo)
-    if(filtroNuevo.length == 0){
-        catalogo.innerHTML = "No tenemos ese producto todavia"
-    }
-    sessionStorage.setItem("usuarioCategoria", valorInput.value)
-
-let categoriaElegidaUsuario= sessionStorage.getItem("usuarioCategoria")
-
-console.log(categoriaElegidaUsuario)
+    )
 }
 
-localStorage.setItem("helados", JSON.stringify(listaDeProductos))
+let addAlCarrito = (prodId) => {
 
-let a = JSON.parse(localStorage.getItem("helados"))
+    
+    let existe = carrito.some (prod => prod.id === prodId)
 
-console.log(a)
+    if (existe){ 
+        let prod = carrito.map (prod => { 
+            if (prod.id === prodId){
+                prod.cantidad++
+            }
+        })
+    } else { 
+        const item = productos.find((prod) => prod.id === prodId)
+        carrito.push(item)
+    }
+    
+    actualizarCarrito()
+    console.log(carrito ) 
+}
+
+function actualizarCarrito(){
+
+    carrito.forEach((producto) => {
+        let componentes = document.createElement("div")
+        componentes.classList.add("divCarrito")
+        componentes.innerHTML= `
+        <p> Nombre: ${producto.nombre}</p>
+        <p> Precio: ${producto.precio}</p
+        <p id="negrita"> Cantidad: ${producto.cantidad}<p/>
+        <button id="botonBorrado" class="btn btn-danger"> X</button>
+        `
+    }
+    )
+}
+
+carritoButton.addEventListener("click", () =>{
+    console.log("funciona?")
+    let carritoHeader = document.createElement("div")
+    carritoHeader.classList.add("divHeader")
+    carritoHeader.innerHTML= `
+    <p class="carritoStyle"> Tu carrito</p>
+    <button class="btn btn-danger"> X </button>
+    `
+    //crear el body del modal 
+    let carritoFooter = document.createElement("div")
+    carritoFooter.classList.add("divFooter")
+    carritoFooter.innerText = "El total de tu compras es:" + total() 
+    
+    
+    modal.append(carritoHeader)
+    
+    modal.append(carritoFooter)
+    
+})
+
+function total(){
+    carrito.reduce((acc, elemento) => acc + elemento.precio, 0 )
+}
+
+/* for(prod of productos){
+let card = document.createElement("div")
+
+card.className = "card"
+
+card.innerHTML = `<img src=${prod.img}> <hr> <div class="cardBody"><h2>Sabor: ${prod.nombre}</h2> <p> Precio por kilo: $${prod.precio}</p><p>Descripcion: ${prod.descrip}</div> <div class="cardButton"><button class="botonesStyle" id="botones" mark="${prod.id}"> Comprar </button> </div>`
 
 
-/* let eleccionDeSabor = prompt("Elija una categoria A) Crema B)Agua") */
+botonesStyle.addEventListener("click", anadirAlCarrito)
+
+catalogo.append(card) */

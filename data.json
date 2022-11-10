@@ -1,0 +1,59 @@
+{
+    "productos":
+    [
+    {
+        "nombre": "Dulce de Leche" ,
+        "precio": 500,
+        "categoria": "crema",
+        "img": "./img/dulcedeleche.jpg",
+        "id": 1,
+        "descrip": "Crema helada de Dulce de Leche",
+        "cantidad": 1
+    },
+    {
+        "nombre": "Americana" ,
+        "precio": 480,
+        "categoria": "crema",
+        "img": "./img/crema-americana.jpg",
+        "id": 2,
+        "descrip": "Helado de Crema Americana con una nueva formula.",
+        "cantidad": 1
+    },
+    {
+        "nombre": "Frutilla" ,
+        "precio": 430,
+        "categoria": "agua",
+        "img": "./img/frutilla-agua.jpg",
+        "id": 3,
+        "descrip": "Helado de agua de frutilla con trocitos de frutillas.",
+        "cantidad": 1
+    },
+    {
+        "nombre": "Durazno" ,
+        "precio": 460,
+        "categoria": "agua",
+        "img": "./img/Durazno-a-la-crema.jpg",
+        "id": 4,
+        "descrip": "Helado de agua de Durazno.",
+        "cantidad": 1
+    },
+    {
+        "nombre": "Maracuya" ,
+        "precio": 500,
+        "categoria": "agua",
+        "img": "./img/maracuya.jpg",
+        "id": 5,
+        "descrip": "Helado de agua sabor maracuyá, con agregado de pulpa de maracuyá.",
+        "cantidad": 1
+    },
+    {
+        "nombre": "Chocolate" ,
+        "precio": 500,
+        "categoria": "crema",
+        "img": "./img/chocolate.jpg",
+        "id": 6,
+        "descrip": "Crema helada de chocolate semi amargo.",
+        "cantidad": 1
+    }
+]
+}
