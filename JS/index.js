@@ -1,9 +1,11 @@
 //llamar los datos del json}
 let catalogo = document.getElementById("catalogo")
 let carrito = []
-const carritoButton = document.getElementById("botonCarrito")
-const modal = document.getElementById("conteinerModal")
-
+const botonCarrito = document.getElementById("botonCarrito")
+const conteinerCarrito = document.getElementById("conteinerModal")
+const total = document.getElementById("totalCompra")
+const vaciar = document.getElementById("vaciarCarrito")
+const comprar = document.getElementById("comprarProductos")
 fetch('data.json')
 .then((response) => response.json())
 .then((resultado)=>{
@@ -13,6 +15,7 @@ fetch('data.json')
     generarProductos(productos)
 
 })
+cargarElCarrito()
 
 
 function generarProductos(productos){
@@ -24,92 +27,161 @@ function generarProductos(productos){
         <img src=${producto.img}> 
         <hr>
         <div class="cardBody">
-            <h2> Sabor: ${producto.nombre}<//h2>
+            <h2> Sabor: ${producto.nombre}</h2>
             <p> Precio por kilo: $${producto.precio}</p>
             <p> Descripcion: ${producto.descrip}</p>
         </div>
-        <div class="cardButton">
-            <button class="botonesStyle" id="agregar ${producto.id}">Comprar</button>
-        </div>
         `
-
-    catalogo.append(card);
-    let button = document.getElementById(`agregar ${producto.id}`);
-    button.addEventListener("click", () => {
-        addAlCarrito(producto.id)
+        let cardButton = document.createElement("div")
+        cardButton.classList.add("cardButton")
+        let shopButton = document.createElement("button")
+        shopButton.classList.add("botonesStyle")
+        shopButton.innerText = "Comprar"
+        shopButton.setAttribute("mark", producto.id)
+        shopButton.addEventListener("click", addToCart)
+        
+        cardButton.append(shopButton)
+        card.append(cardButton)
+        catalogo.append(card);
+        
     })
-    
-    }
-    )
+    total.innerText = "TOTAL: " + "$" + calcularPrecioTotal()
 }
 
-let addAlCarrito = (prodId) => {
+function addToCart(e){
+    carrito.push(e.target.getAttribute('mark'))
+    renderizarCarrito()
+}
 
-    
-    let existe = carrito.some (prod => prod.id === prodId)
+function renderizarCarrito(){
+    guardarEnStorage()
+    conteinerCarrito.innerHTML = ""
+    let carritoNoRepeat = [... new Set(carrito)]
 
-    if (existe){ 
-        let prod = carrito.map (prod => { 
-            if (prod.id === prodId){
-                prod.cantidad++
-            }
+    carritoNoRepeat.forEach((prod) => {
+        let item = productos.filter((producto) => {
+            return producto.id === parseInt(prod)
         })
-    } else { 
-        const item = productos.find((prod) => prod.id === prodId)
-        carrito.push(item)
-    }
+        let cantidad = carrito.reduce((total , id) =>{
+            return id === prod ? total+=1 : total
+        }, 0)
+        
     
-    actualizarCarrito()
-    console.log(carrito ) 
+    
+
+    let lineProduct = document.createElement("div")
+    lineProduct.classList.add("lineProductStyle")
+    lineProduct.innerText = `1K de ${item[0].nombre} x ${cantidad} $${item[0].precio}`
+
+    let botonEliminar = document.createElement("button")
+    botonEliminar.classList.add("btn", "btn-danger")
+    botonEliminar.innerText = "X"
+    botonEliminar.setAttribute("item", prod)
+    botonEliminar.addEventListener("click", eliminarProducto)
+
+    lineProduct.append(botonEliminar)
+    conteinerCarrito.append(lineProduct)
+    })
+    Toastify ({
+        text: 'Se agregó el producto',
+        duration: 2000,
+        gravity: 'bottom',
+        position: 'right',
+        style: {
+            background: '#ed639d'
+        }
+    }).showToast();
+    total.innerText = "TOTAL: " + "$" + calcularPrecioTotal()
+}
+function guardarEnStorage(){
+    localStorage.setItem("carrito", JSON.stringify(carrito))
 }
 
-function actualizarCarrito(){
 
-    carrito.forEach((producto) => {
-        let componentes = document.createElement("div")
-        componentes.classList.add("divCarrito")
-        componentes.innerHTML= `
-        <p> Nombre: ${producto.nombre}</p>
-        <p> Precio: ${producto.precio}</p
-        <p id="negrita"> Cantidad: ${producto.cantidad}<p/>
-        <button id="botonBorrado" class="btn btn-danger"> X</button>
-        `
+function eliminarProducto(e){
+    let id = e.target.getAttribute("item")
+    carrito = carrito.filter((carritoId) => {
+        return carritoId != id
     }
     )
+    renderizarCarrito()
 }
 
-carritoButton.addEventListener("click", () =>{
-    console.log("funciona?")
-    let carritoHeader = document.createElement("div")
-    carritoHeader.classList.add("divHeader")
-    carritoHeader.innerHTML= `
-    <p class="carritoStyle"> Tu carrito</p>
-    <button class="btn btn-danger"> X </button>
-    `
-    //crear el body del modal 
-    let carritoFooter = document.createElement("div")
-    carritoFooter.classList.add("divFooter")
-    carritoFooter.innerText = "El total de tu compras es:" + total() 
-    
-    
-    modal.append(carritoHeader)
-    
-    modal.append(carritoFooter)
-    
-})
+vaciar.addEventListener("click", vaciarCarrito)
 
-function total(){
-    carrito.reduce((acc, elemento) => acc + elemento.precio, 0 )
+
+function vaciarCarrito(){
+    Swal.fire({
+        title: 'Estás seguro de vaciar el carrito?',
+        icon: 'warning',
+        showCancelButton: true,
+        showConfirmButton: true,
+        confirmButtonColor: 'green',
+        cancelButtonColor: 'red',
+        confirmButtonText: 'Si, vacíalo!',
+        cancelButtonText: 'Cancelar',
+        allowEnterKey: true
+    }).then((result) => {
+        if (result.isConfirmed) {
+        Swal.fire(
+            'Vaciado!',
+            'Tu pedido ha sido eliminado.',
+            'success'
+            )
+            conteinerCarrito.innerHTML = ""
+            carrito = []
+            total.innerText = "TOTAL: " + "$" + 0
+        }
+    })
+
+}
+comprar.addEventListener("click", () =>{
+        Swal.fire(
+            'Tu compra se realizo con exito',
+            'Pronto recibiras una notificacion con los datos de tu pedido',
+            'success'
+        )
+        carrito = []
+        conteinerCarrito.innerHTML = ""
+        total.innerText = "TOTAL: " + "$" + 0
+        }
+)
+function cargarElCarrito(){
+    if(localStorage.getItem("carrito") !== null){
+        JSON.parse(localStorage.getItem("carrito"))
+    }
 }
 
-/* for(prod of productos){
-let card = document.createElement("div")
 
-card.className = "card"
+function calcularPrecioTotal(){
+    return carrito.reduce((total, item)=> {
+        let prod = productos.filter((producto) =>{
+            return producto.id === parseInt(item)
+        })
+        return total + prod[0].precio
+    }, 0)
+}
+let eleccionDeCategoria = ""
+let valorInput = document.getElementById("categoriaElegida")
+valorInput.addEventListener("change", ()=>{eleccionDeCategoria = valorInput.value}) 
 
-card.innerHTML = `<img src=${prod.img}> <hr> <div class="cardBody"><h2>Sabor: ${prod.nombre}</h2> <p> Precio por kilo: $${prod.precio}</p><p>Descripcion: ${prod.descrip}</div> <div class="cardButton"><button class="botonesStyle" id="botones" mark="${prod.id}"> Comprar </button> </div>`
 
 
-botonesStyle.addEventListener("click", anadirAlCarrito)
+let botonDeFiltrado = document.getElementById("filtrar")
 
-catalogo.append(card) */
+botonDeFiltrado.addEventListener("click", filtradoProductos)
+
+let mostrarTodos = document.getElementById("volverATodos")
+
+mostrarTodos.addEventListener("click", ()=>{generarProductos(productos)})
+
+function filtradoProductos(){
+    let filtroNuevo = productos.filter((prod) => prod.categoria == eleccionDeCategoria)
+    generarProductos(filtroNuevo)
+    if(filtroNuevo.length == 0){
+        let productoEquivocado = document.createElement("p")
+        productoEquivocado.classList.add("productoError")
+        productoEquivocado.innerText = "Perdon, no tenemos este producto todavia"
+        catalogo.append(productoEquivocado)
+    }
+}

@@ -33,6 +33,7 @@ img{
     width: auto;
     height: auto;
     background-color: rgb(248, 248, 248);
+    box-shadow: 0 0 20px ;
 }
 .card img{
     display: block;
@@ -75,12 +76,16 @@ img{
 .card h2{
     font-size: 20px;
     font-weight:normal;
+    
 }
 .botonesStyle{
     margin: 30px;
     border-radius: 20px;
-    
+    height: 30px;
     border-width: 2px;
+}
+.botonesStyle:hover{
+    background-color: rgb(142, 164, 185);
 }
 hr{
     width: 100%;
@@ -115,17 +120,7 @@ li a{
 li a:hover{
     color: black;
 }
-.navbar{
-    margin: 50px;
-    display: flex;
-    justify-content: flex-end;
-    width: 300px;
-    background-color: aquamarine;
-}
-.navbar>.container-fluid{
-    justify-content: flex-end;
-    
-}
+
 #conteinerSearch{
     height: auto;
     margin: 7px;
@@ -157,58 +152,46 @@ li a:hover{
 #volverATodos:hover{
     background-color: rgb(142, 164, 185);
 }
-
+.conteiner-carrito{
+    margin: 12px;
+}
 .conteiner-modal{
     height: 400px;
-    background-color: gray;
+    margin: 15px;
 }
-
-
-/* modal content */
-.modal-conteiner{
-    width: 80%;
-    margin: 0 10%;
-    max-height: 88vh;
-    color: #fff;
-    background-color: black;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    position: fixed;
-    overflow: auto;
-    z-index: 9;
-    top: 12vh;
-    scrollbar-color: none;
-}
-
-.modal-conteiner::-webkit-scrollbar{
-    display: none;
-}
-.modal-header{
-    display: flex;
-    justify-content: space-around;
-    background-color: black;
-    color: #fff;
-    width: 100%;
-}
-.modal-header-title{
-    justify-self: start;
-}
-.modal-header-button{
-    cursor: pointer;
-}
-
-.modal-conteiner > .modal-content{
-    display: flex;
-    flex-direction: row;
-    justify-content: space-around;
-    align-items: center;
-    width: 70%;
+.lineProductStyle{
     margin: 10px;
-}
-.total-content{
-    font-size: 25px;
-    padding: 20px;
+    background-color: white;
+    height: 80px;
     text-align: center;
-    padding-top: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px;
+    border-radius: 20px;
+    box-shadow: 0 0 25px ;
+}
+
+.titleCart{
+    margin: 25px;
+}
+.conteinerFooter{
+    display: flex;
+    justify-content: space-evenly;
+    align-content: center;
+    
+}
+
+#totalCompra{
+    font-family:Arial, Helvetica, sans-serif;
+    font-size: 20px;
+    font-weight: bold;
+}
+.productoError{
+    display: flex;
+    justify-content: center;
+    font-size: 40px;
+    font-weight: bold;
+    font-family: Arial, Helvetica, sans-serif;
+    align-items: center;
 }
